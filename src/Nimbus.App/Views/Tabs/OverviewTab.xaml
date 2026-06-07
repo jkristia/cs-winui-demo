@@ -1,0 +1,27 @@
+<UserControl
+    x:Class="Nimbus.App.Views.Tabs.OverviewTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:tabsvm="using:Nimbus.App.ViewModels.Tabs">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ItemsRepeater ItemsSource="{Binding Tiles}" VerticalAlignment="Top">
+            <ItemsRepeater.Layout>
+                <UniformGridLayout MinItemWidth="240" MinColumnSpacing="16" MinRowSpacing="16" ItemsStretch="Fill" />
+            </ItemsRepeater.Layout>
+            <ItemsRepeater.ItemTemplate>
+                <DataTemplate x:DataType="tabsvm:StatTile">
+                    <Border Style="{StaticResource CardStyle}">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="{x:Bind Label}" Style="{StaticResource CaptionTextBlockStyle}"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                            <TextBlock Text="{x:Bind Value}" Style="{StaticResource TitleTextBlockStyle}" />
+                            <TextBlock Text="{x:Bind Caption}" Style="{StaticResource CaptionTextBlockStyle}"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsRepeater.ItemTemplate>
+        </ItemsRepeater>
+    </ScrollViewer>
+</UserControl>

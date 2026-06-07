@@ -1,0 +1,46 @@
+<UserControl
+    x:Class="Nimbus.App.Views.Tabs.AudienceTab"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:tabsvm="using:Nimbus.App.ViewModels.Tabs">
+
+    <Border Style="{StaticResource CardStyle}" VerticalAlignment="Top">
+        <StackPanel Spacing="16">
+            <StackPanel Spacing="4">
+                <TextBlock Text="Traffic sources" Style="{StaticResource SubtitleTextBlockStyle}" />
+                <TextBlock Text="Share of sessions by channel" Style="{StaticResource CaptionTextBlockStyle}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <ItemsRepeater ItemsSource="{Binding Sources}">
+                <ItemsRepeater.Layout>
+                    <StackLayout Spacing="14" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="tabsvm:TrafficShare">
+                        <StackPanel Spacing="6">
+                            <Grid>
+                                <TextBlock Text="{x:Bind Name}" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                <TextBlock HorizontalAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                    <Run Text="{x:Bind Sessions}" />
+                                    <Run Text=" sessions" />
+                                </TextBlock>
+                            </Grid>
+                            <Grid ColumnSpacing="12">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <ProgressBar Maximum="100" Value="{x:Bind Percent}" VerticalAlignment="Center" />
+                                <TextBlock Grid.Column="1" MinWidth="44" HorizontalAlignment="Right"
+                                           Text="{x:Bind PercentText}"
+                                           Style="{StaticResource BodyStrongTextBlockStyle}" />
+                            </Grid>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </StackPanel>
+    </Border>
+</UserControl>

@@ -1,0 +1,107 @@
+<Page
+    x:Class="Nimbus.App.Views.ProjectsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Nimbus.App.ViewModels"
+    xmlns:models="using:Nimbus.Core.Models">
+
+    <Grid Padding="36,28,36,0" RowSpacing="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Header + filter -->
+        <Grid Grid.Row="0">
+            <StackPanel Spacing="4" VerticalAlignment="Center">
+                <TextBlock Text="Projects" Style="{StaticResource PageTitleStyle}" />
+                <TextBlock Text="Track delivery across the whole portfolio."
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <ComboBox HorizontalAlignment="Right" VerticalAlignment="Center" MinWidth="160"
+                      Header="Status"
+                      ItemsSource="{x:Bind ViewModel.StatusFilters}"
+                      SelectedItem="{x:Bind ViewModel.SelectedStatusFilter, Mode=TwoWay}" />
+        </Grid>
+
+        <!-- Project cards -->
+        <ScrollViewer Grid.Row="1" Padding="0,0,0,36">
+            <ItemsRepeater ItemsSource="{x:Bind ViewModel.Projects, Mode=OneWay}">
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout MinItemWidth="380" MinColumnSpacing="20" MinRowSpacing="20" ItemsStretch="Fill" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ProjectCard">
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel Spacing="14">
+
+                                <!-- Title + status pill -->
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="{x:Bind Project.Name}"
+                                                   Style="{StaticResource SubtitleTextBlockStyle}" />
+                                        <TextBlock Text="{x:Bind Project.Client}"
+                                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
+                                    <Border Grid.Column="1" CornerRadius="12" Padding="10,3" Height="24" VerticalAlignment="Center"
+                                            Background="{x:Bind Project.Status, Converter={StaticResource StatusBrush}, ConverterParameter=Background}">
+                                        <TextBlock VerticalAlignment="Center"
+                                                   Style="{StaticResource CaptionTextBlockStyle}" FontWeight="SemiBold"
+                                                   Text="{x:Bind Project.Status, Converter={StaticResource StatusText}}"
+                                                   Foreground="{x:Bind Project.Status, Converter={StaticResource StatusBrush}}" />
+                                    </Border>
+                                </Grid>
+
+                                <!-- Progress -->
+                                <StackPanel Spacing="6">
+                                    <Grid>
+                                        <TextBlock Text="Progress" Style="{StaticResource CaptionTextBlockStyle}"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                        <TextBlock HorizontalAlignment="Right" Style="{StaticResource CaptionTextBlockStyle}"
+                                                   FontWeight="SemiBold"
+                                                   Text="{x:Bind Project.Progress, Converter={StaticResource Percent}}" />
+                                    </Grid>
+                                    <ProgressBar Maximum="1" Value="{x:Bind Project.Progress}" />
+                                </StackPanel>
+
+                                <!-- Footer: team + due / budget -->
+                                <Grid>
+                                    <ItemsRepeater ItemsSource="{x:Bind Team}" HorizontalAlignment="Left">
+                                        <ItemsRepeater.Layout>
+                                            <StackLayout Orientation="Horizontal" Spacing="6" />
+                                        </ItemsRepeater.Layout>
+                                        <ItemsRepeater.ItemTemplate>
+                                            <DataTemplate x:DataType="models:TeamMember">
+                                                <Border Width="30" Height="30" CornerRadius="15" ToolTipService.ToolTip="{x:Bind Name}"
+                                                        Background="{ThemeResource AccentFillColorDefaultBrush}">
+                                                    <TextBlock Text="{x:Bind Initials}" FontSize="11" FontWeight="SemiBold"
+                                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                               Foreground="{ThemeResource TextOnAccentFillColorPrimaryBrush}" />
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsRepeater.ItemTemplate>
+                                    </ItemsRepeater>
+
+                                    <StackPanel HorizontalAlignment="Right" Spacing="2">
+                                        <TextBlock Text="{x:Bind BudgetText}" HorizontalAlignment="Right"
+                                                   Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                        <TextBlock Text="{x:Bind DueText}" HorizontalAlignment="Right"
+                                                   Style="{StaticResource CaptionTextBlockStyle}"
+                                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,53 @@
+<Page
+    x:Class="Nimbus.App.Views.ShellPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:vm="using:Nimbus.App.ViewModels"
+    mc:Ignorable="d"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- Draggable title bar strip; sits above the NavigationView. -->
+        <Border x:Name="AppTitleBar" Grid.Row="0" Height="48" Canvas.ZIndex="1" VerticalAlignment="Top">
+            <StackPanel Orientation="Horizontal" Spacing="12" Margin="48,0,0,0" VerticalAlignment="Center">
+                <FontIcon Glyph="&#xE753;" FontSize="16" Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}" />
+                <TextBlock Text="Nimbus" Style="{StaticResource CaptionTextBlockStyle}"
+                           VerticalAlignment="Center" FontWeight="SemiBold" />
+            </StackPanel>
+        </Border>
+
+        <NavigationView
+            x:Name="NavView"
+            Grid.Row="0"
+            Grid.RowSpan="2"
+            PaneDisplayMode="Left"
+            OpenPaneLength="240"
+            IsBackButtonVisible="Visible"
+            IsBackEnabled="{x:Bind ViewModel.IsBackEnabled, Mode=OneWay}"
+            IsSettingsVisible="True"
+            IsTitleBarAutoPaddingEnabled="True"
+            MenuItemsSource="{x:Bind ViewModel.NavigationItems}"
+            SelectionChanged="NavView_SelectionChanged"
+            BackRequested="NavView_BackRequested"
+            Loaded="NavView_Loaded">
+
+            <NavigationView.MenuItemTemplate>
+                <DataTemplate x:DataType="vm:NavigationItem">
+                    <NavigationViewItem Content="{x:Bind Label}">
+                        <NavigationViewItem.Icon>
+                            <FontIcon Glyph="{x:Bind Glyph}" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                </DataTemplate>
+            </NavigationView.MenuItemTemplate>
+
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
+    </Grid>
+</Page>

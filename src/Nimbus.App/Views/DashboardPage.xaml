@@ -1,0 +1,118 @@
+<Page
+    x:Class="Nimbus.App.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="using:Nimbus.App.Controls"
+    xmlns:models="using:Nimbus.Core.Models">
+
+    <ScrollViewer>
+        <StackPanel Padding="36,28,36,36" Spacing="28" MaxWidth="1280" HorizontalAlignment="Stretch">
+
+            <!-- Greeting -->
+            <StackPanel Spacing="4">
+                <TextBlock Text="{x:Bind ViewModel.Greeting}" Style="{StaticResource PageTitleStyle}" />
+                <TextBlock Text="{x:Bind ViewModel.Subtitle}"
+                           Style="{StaticResource BodyTextBlockStyle}"
+                           Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+            </StackPanel>
+
+            <!-- KPI cards -->
+            <ItemsRepeater ItemsSource="{x:Bind ViewModel.Kpis, Mode=OneWay}">
+                <ItemsRepeater.Layout>
+                    <UniformGridLayout MinItemWidth="220" MinColumnSpacing="16" MinRowSpacing="16" ItemsStretch="Fill" />
+                </ItemsRepeater.Layout>
+                <ItemsRepeater.ItemTemplate>
+                    <DataTemplate x:DataType="models:Metric">
+                        <controls:MetricCard Metric="{x:Bind}" />
+                    </DataTemplate>
+                </ItemsRepeater.ItemTemplate>
+            </ItemsRepeater>
+
+            <!-- Two-column section: active projects + activity feed -->
+            <Grid ColumnSpacing="24" RowSpacing="24">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*" MinWidth="320" />
+                    <ColumnDefinition Width="2*" MinWidth="280" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Active projects -->
+                <StackPanel Grid.Column="0" Spacing="8">
+                    <Grid>
+                        <TextBlock Text="Most active projects" Style="{StaticResource SectionHeaderStyle}"
+                                   VerticalAlignment="Center" />
+                        <HyperlinkButton Content="View all" HorizontalAlignment="Right"
+                                         Command="{x:Bind ViewModel.ViewAllProjectsCommand}" />
+                    </Grid>
+
+                    <Border Style="{StaticResource CardStyle}">
+                        <ItemsRepeater ItemsSource="{x:Bind ViewModel.ActiveProjects, Mode=OneWay}">
+                            <ItemsRepeater.Layout>
+                                <StackLayout Spacing="4" />
+                            </ItemsRepeater.Layout>
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate x:DataType="models:Project">
+                                    <Grid Padding="0,10" ColumnSpacing="16">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Spacing="6">
+                                            <TextBlock Text="{x:Bind Name}" Style="{StaticResource BodyStrongTextBlockStyle}" />
+                                            <TextBlock Text="{x:Bind Client}" Style="{StaticResource CaptionTextBlockStyle}"
+                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
+                                            <ProgressBar Maximum="1" Value="{x:Bind Progress}" />
+                                        </StackPanel>
+                                        <TextBlock Grid.Column="1" VerticalAlignment="Center"
+                                                   Style="{StaticResource BodyStrongTextBlockStyle}"
+                                                   Text="{x:Bind Progress, Converter={StaticResource Percent}}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                    </Border>
+                </StackPanel>
+
+                <!-- Activity feed -->
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="Recent activity" Style="{StaticResource SectionHeaderStyle}" />
+                    <Border Style="{StaticResource CardStyle}">
+                        <ItemsRepeater ItemsSource="{x:Bind ViewModel.RecentActivity, Mode=OneWay}">
+                            <ItemsRepeater.Layout>
+                                <StackLayout Spacing="6" />
+                            </ItemsRepeater.Layout>
+                            <ItemsRepeater.ItemTemplate>
+                                <DataTemplate x:DataType="models:ActivityItem">
+                                    <Grid Padding="0,8" ColumnSpacing="12">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Border Width="32" Height="32" CornerRadius="16" VerticalAlignment="Top"
+                                                Background="{ThemeResource LayerFillColorDefaultBrush}"
+                                                BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" BorderThickness="1">
+                                            <FontIcon FontSize="14"
+                                                      Glyph="{x:Bind Kind, Converter={StaticResource ActivityGlyph}}" />
+                                        </Border>
+                                        <StackPanel Grid.Column="1" Spacing="2">
+                                            <TextBlock TextWrapping="Wrap">
+                                                <Run Text="{x:Bind ActorName}" FontWeight="SemiBold" />
+                                                <Run Text=" " />
+                                                <Run Text="{x:Bind Summary}" />
+                                            </TextBlock>
+                                            <TextBlock Style="{StaticResource CaptionTextBlockStyle}"
+                                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}">
+                                                <Run Text="{x:Bind ProjectName}" />
+                                                <Run Text=" · " />
+                                                <Run Text="{x:Bind Timestamp, Converter={StaticResource ShortTimestamp}}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsRepeater.ItemTemplate>
+                        </ItemsRepeater>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
