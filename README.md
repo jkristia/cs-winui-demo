@@ -28,12 +28,12 @@ From a terminal:
 
 ```powershell
 dotnet build Nimbus.sln -p:Platform=x64
-dotnet run --project src/Nimbus.App -p:Platform=x64
+.\src\Nimbus.App\bin\x64\Debug\net8.0-windows10.0.19041.0\win-x64\Nimbus.App.exe
 ```
 
-`dotnet build` already produces a runnable executable at
-`src/Nimbus.App/bin/x64/Debug/net8.0-windows10.0.19041.0/win-x64/Nimbus.App.exe` — you can
-launch that directly without `dotnet run`.
+`dotnet run` does not work here — it ignores the `Platform=x64` MSBuild property when
+resolving the output path and fails to find the executable. Build first, then launch the
+`.exe` directly.
 
 ## Building a distributable
 
